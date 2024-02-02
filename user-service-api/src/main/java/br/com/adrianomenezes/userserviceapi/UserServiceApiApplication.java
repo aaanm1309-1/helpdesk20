@@ -4,8 +4,6 @@ package br.com.adrianomenezes.userserviceapi;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import java.util.Set;
-
 @SpringBootApplication
 public class UserServiceApiApplication  {
 

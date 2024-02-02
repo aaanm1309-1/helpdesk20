@@ -1,5 +1,6 @@
 package br.com.adrianomenezes.userserviceapi.service;
 
+import br.com.adrianomenezes.models.exceptions.ResourceNotFoundException;
 import br.com.adrianomenezes.models.responses.UserResponse;
 import br.com.adrianomenezes.userserviceapi.mapper.UserMapper;
 import br.com.adrianomenezes.userserviceapi.repository.UserRepository;
@@ -14,7 +15,11 @@ public class UserService {
     private final UserMapper userMapper;
 
     public UserResponse findById(final String id) {
-        return userMapper.fromEntity(userRepository.findById(id).orElse(null));
+        return userMapper.fromEntity(
+                userRepository
+                        .findById(id)
+                        .orElseThrow(()->
+                                new ResourceNotFoundException("User not found. Id: " + id +", Type: " + UserResponse.class.getSimpleName())) );
 
     }
 }

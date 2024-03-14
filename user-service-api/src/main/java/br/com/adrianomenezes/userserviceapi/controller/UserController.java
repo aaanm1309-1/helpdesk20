@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -58,12 +59,12 @@ public interface UserController {
     })
     @PostMapping
     ResponseEntity<Void> save(
-//            @Parameter(description = "User id", required = true, example = "65bc391ab0973863d7ff8cab")
+            @Valid
             @RequestBody final CreateUserRequest createUserRequest
     );
 
 
-    @Operation(summary = "Find user by id")
+    @Operation(summary = "Find all users")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "User found"),
             @ApiResponse(responseCode = "404",

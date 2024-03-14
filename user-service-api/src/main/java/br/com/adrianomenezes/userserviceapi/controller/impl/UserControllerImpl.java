@@ -1,6 +1,7 @@
 package br.com.adrianomenezes.userserviceapi.controller.impl;
 
 import br.com.adrianomenezes.models.requests.CreateUserRequest;
+import br.com.adrianomenezes.models.requests.UpdateUserRequest;
 import br.com.adrianomenezes.models.responses.UserResponse;
 import br.com.adrianomenezes.userserviceapi.controller.UserController;
 import br.com.adrianomenezes.userserviceapi.service.UserService;
@@ -32,5 +33,11 @@ public class UserControllerImpl implements UserController {
     @Override
     public ResponseEntity<List<UserResponse>> findAll() {
         return ResponseEntity.ok().body(userService.findAll());
+    }
+
+    @Override
+    public ResponseEntity<UserResponse> update(final String id,
+                                               final UpdateUserRequest updateUserRequest) {
+        return ResponseEntity.ok().body(userService.update(id, updateUserRequest));
     }
 }

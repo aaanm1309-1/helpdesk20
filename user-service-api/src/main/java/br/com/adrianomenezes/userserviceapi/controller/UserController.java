@@ -3,6 +3,7 @@ package br.com.adrianomenezes.userserviceapi.controller;
 
 import br.com.adrianomenezes.models.exceptions.StandardError;
 import br.com.adrianomenezes.models.requests.CreateUserRequest;
+import br.com.adrianomenezes.models.requests.UpdateUserRequest;
 import br.com.adrianomenezes.models.responses.UserResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -86,4 +87,32 @@ public interface UserController {
     ResponseEntity<List<UserResponse>> findAll(
     );
 
+    @Operation(summary = "Save new user")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "User update",
+                    content = @Content(mediaType = APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = UserResponse.class))),
+            @ApiResponse(responseCode = "400",
+                    description = "Bad request",
+                    content = @Content(mediaType = APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = StandardError.class))
+            ),
+            @ApiResponse(responseCode = "404",
+                    description = "User not found",
+                    content = @Content(mediaType = APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = StandardError.class))
+            ),
+            @ApiResponse(responseCode = "500",
+                    description = "Internal server error",
+                    content = @Content(mediaType = APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = StandardError.class))
+            )
+    })
+    @PutMapping("/{id}")
+    ResponseEntity<UserResponse> update(
+            @Parameter(description = "User id", required = true, example = "65bc391ab0973863d7ff8cab")
+            @PathVariable(name = "id") final String id,
+            @Valid
+            @RequestBody final UpdateUserRequest updateUserRequest
+    );
 }

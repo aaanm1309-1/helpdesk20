@@ -6,6 +6,7 @@ import br.com.adrianomenezes.models.responses.UserResponse;
 import br.com.adrianomenezes.userserviceapi.mapper.UserMapper;
 import br.com.adrianomenezes.userserviceapi.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,8 +22,6 @@ public class UserService {
         return userMapper.fromEntityList(
                 userRepository
                         .findAll());
-//                        .orElseThrow(()->
-//                                new ResourceNotFoundException("Record not found. " + ", Type: " + UserResponse.class.getSimpleName())) );
 
     }
 
@@ -36,6 +35,15 @@ public class UserService {
     }
 
     public void save(CreateUserRequest createUserRequest) {
+        verifyIfEmailAlreadyExists(createUserRequest.email(), null);
         userRepository.save(userMapper.fromRequest(createUserRequest));
+    }
+
+    private void verifyIfEmailAlreadyExists(String email, final String id) {
+        userRepository.findByEmail(email)
+                .filter(user -> !user.getId().equals(id))
+                .ifPresent(user -> {
+                    throw new DataIntegrityViolationException("Email [ "+ email + " ] already exists."  );
+                });
     }
 }

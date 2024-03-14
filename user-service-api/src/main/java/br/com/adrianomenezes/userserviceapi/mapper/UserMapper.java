@@ -1,8 +1,12 @@
 package br.com.adrianomenezes.userserviceapi.mapper;
 
+import br.com.adrianomenezes.models.requests.CreateUserRequest;
 import br.com.adrianomenezes.models.responses.UserResponse;
 import br.com.adrianomenezes.userserviceapi.entity.User;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+
+import java.util.List;
 
 import static org.mapstruct.NullValueCheckStrategy.ALWAYS;
 import static org.mapstruct.NullValuePropertyMappingStrategy.*;
@@ -14,4 +18,9 @@ import static org.mapstruct.NullValuePropertyMappingStrategy.*;
 )
 public interface UserMapper {
     UserResponse fromEntity(final User entity);
+
+    @Mapping(target = "id", ignore = true)
+    User fromRequest(CreateUserRequest createUserRequest);
+
+    List<UserResponse> fromEntityList(List<User> all);
 }

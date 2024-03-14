@@ -6,6 +6,7 @@ import br.com.adrianomenezes.models.requests.CreateUserRequest;
 import br.com.adrianomenezes.models.responses.UserResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -66,7 +67,10 @@ public interface UserController {
 
     @Operation(summary = "Find all users")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "User found"),
+            @ApiResponse(responseCode = "200", description = "User found",
+                    content = @Content(mediaType = APPLICATION_JSON_VALUE,
+                            array = @ArraySchema(schema = @Schema(implementation = StandardError.class)))
+            ),
             @ApiResponse(responseCode = "404",
                     description = "User not found",
                     content = @Content(mediaType = APPLICATION_JSON_VALUE,

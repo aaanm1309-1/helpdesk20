@@ -19,9 +19,14 @@ public class UserService {
     private final UserMapper userMapper;
 
     public List<UserResponse> findAll() {
-        return userMapper.fromEntityList(
-                userRepository
-                        .findAll());
+//        return userMapper.fromEntityList(
+//                userRepository
+//                        .findAll());
+//
+        return  userRepository
+                .findAll()
+                .stream().map(userMapper::fromEntity)
+                .toList();
 
     }
 

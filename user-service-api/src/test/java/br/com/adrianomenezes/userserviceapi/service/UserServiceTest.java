@@ -2,6 +2,7 @@ package br.com.adrianomenezes.userserviceapi.service;
 
 import br.com.adrianomenezes.models.exceptions.ResourceNotFoundException;
 import br.com.adrianomenezes.models.requests.CreateUserRequest;
+import br.com.adrianomenezes.models.requests.UpdateUserRequest;
 import br.com.adrianomenezes.models.responses.UserResponse;
 import br.com.adrianomenezes.userserviceapi.entity.User;
 import br.com.adrianomenezes.userserviceapi.mapper.UserMapper;
@@ -130,6 +131,53 @@ class UserServiceTest {
         verify(mapper, never()).fromRequest(request);
         verify(encoder, never()).encode(request.password());
         verify(repository, never()).save(any(User.class));
+    }
+
+    @Test
+    void whenCallUpdateThenUpdateUser() {
+        final var request = generateMock(UpdateUserRequest.class);
+        final var entity = generateMock(User.class);
+
+        when(repository.findById(anyString())).thenReturn(Optional.of(entity));
+
+        when(mapper.update(any(), any())).thenReturn(entity);
+        when(encoder.encode(anyString())).thenReturn("encoded");
+        when(repository.save(any(User.class))).thenReturn(entity);
+        when(repository.findByEmail(anyString())).thenReturn(Optional.empty());
+
+        userService.update(entity.getId(), request);
+
+        verify(repository, times(1)).findById(entity.getId());
+        verify(mapper, times(1)).update(request, entity);
+        verify(mapper, times(1)).fromEntity(entity);
+        verify(encoder, times(1)).encode(request.password());
+        verify(repository, times(1)).save(any(User.class));
+        verify(repository).findByEmail(request.email());
+    }
+
+    @Test
+    void whenCallUpdateWithExistingEmailThenThrowResourceNotFoundException() {
+        final var request = generateMock(UpdateUserRequest.class);
+        final var entity = generateMock(User.class);
+
+        when(repository.findById(anyString())).thenReturn(Optional.of(entity));
+        when(repository.findByEmail(anyString())).thenReturn(Optional.of(entity));
+
+        assertThrows(DataIntegrityViolationException.class, () -> userService.update("1", request));
+
+        try {
+            userService.update("1", request);
+            fail("DataIntegrityViolationException not thrown");
+        } catch (DataIntegrityViolationException e) {
+            assertEquals(DataIntegrityViolationException.class, e.getClass());
+            assertEquals("Email [ "+ request.email() + " ] already exists." , e.getMessage());
+        }
+
+        verify(repository, times(2)).findById("1");
+        verify(repository, times(2)).findByEmail(request.email());
+        verify(mapper, never()).update(request, entity);
+        verify(encoder, never()).encode(request.password());
+        verify(repository, never()).save(entity);
     }
 
 

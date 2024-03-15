@@ -1,5 +1,6 @@
 package br.com.adrianomenezes.userserviceapi.service;
 
+import br.com.adrianomenezes.models.exceptions.ResourceNotFoundException;
 import br.com.adrianomenezes.models.responses.UserResponse;
 import br.com.adrianomenezes.userserviceapi.entity.User;
 import br.com.adrianomenezes.userserviceapi.mapper.UserMapper;
@@ -48,5 +49,25 @@ class UserServiceTest {
 
         verify(repository, times(1)).findById(anyString());
     }
+
+    @Test
+    void whenCallFindByIdWithInvalidIdThenThrowResourceNotFoundException() {
+        when(repository.findById(anyString())).thenReturn(Optional.empty());
+
+        assertThrows(ResourceNotFoundException.class, () -> userService.findById("2"));
+
+        try {
+            userService.findById("1");
+            fail("ResourceNotFoundException not thrown");
+        } catch (ResourceNotFoundException e) {
+            assertEquals(ResourceNotFoundException.class, e.getClass());
+            assertEquals("User not found. Id: 1, Type: UserResponse", e.getMessage());
+
+        }
+
+        verify(repository, times(2)).findById(anyString());
+        verify(mapper, never()).fromEntity(any(User.class));
+    }
+
 
 }

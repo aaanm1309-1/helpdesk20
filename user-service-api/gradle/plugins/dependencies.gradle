@@ -48,10 +48,10 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
     // Mockito test Dependency
-    testImplementation 'org.mockito:mockito-inline:5.2.0'
+//    testImplementation 'org.mockito:mockito-inline:5.2.0'
 
     // Biblioteca para geração de dados aleatórios para testes
-//    implementation 'uk.co.jemos.podam:podam:7.2.6.RELEASE'
+    implementation 'uk.co.jemos.podam:podam:7.2.6.RELEASE'
 }
 
 dependencyManagement {

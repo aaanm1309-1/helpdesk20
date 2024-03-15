@@ -1,6 +1,7 @@
 package br.com.adrianomenezes.userserviceapi.service;
 
 import br.com.adrianomenezes.models.exceptions.ResourceNotFoundException;
+import br.com.adrianomenezes.models.requests.CreateUserRequest;
 import br.com.adrianomenezes.models.responses.UserResponse;
 import br.com.adrianomenezes.userserviceapi.entity.User;
 import br.com.adrianomenezes.userserviceapi.mapper.UserMapper;
@@ -15,6 +16,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import java.util.List;
 import java.util.Optional;
 
+import static br.com.adrianomenezes.userserviceapi.creator.CreatorUtils.generateMock;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -77,7 +79,7 @@ class UserServiceTest {
                 List.of(new User(), new User())
         );
         when(mapper.fromEntity(any(User.class))).thenReturn(
-                mock(UserResponse.class)
+                generateMock(UserResponse.class)
         );
 
         final var response = userService.findAll();
@@ -88,6 +90,22 @@ class UserServiceTest {
 
         verify(repository, times(1)).findAll();
         verify(mapper, times(2)).fromEntity(any(User.class));
+    }
+
+    @Test
+    void whenCallSaveThenSaveUser() {
+        final var request = generateMock(CreateUserRequest.class);
+        when(mapper.fromRequest(request)).thenReturn(new User());
+        when(encoder.encode(anyString())).thenReturn("encoded");
+        when(repository.save(any(User.class))).thenReturn(new User());
+        when(repository.findByEmail(anyString())).thenReturn(Optional.empty());
+
+        userService.save(request);
+
+        verify(mapper, times(1)).fromRequest(request);
+        verify(encoder, times(1)).encode(request.password());
+        verify(repository, times(1)).save(any(User.class));
+        verify(repository).findByEmail(request.email());
     }
 
 

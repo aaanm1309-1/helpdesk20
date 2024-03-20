@@ -1,4 +1,4 @@
-package br.com.adrianomenezes.authserviceapi.controllers.configs;
+package br.com.adrianomenezes.authserviceapi.configs;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

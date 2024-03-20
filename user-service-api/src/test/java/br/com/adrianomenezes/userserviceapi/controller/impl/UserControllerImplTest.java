@@ -8,17 +8,14 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
 
 import static br.com.adrianomenezes.userserviceapi.creator.CreatorUtils.generateMock;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.springframework.http.HttpStatus.CONFLICT;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
-import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -30,6 +27,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ActiveProfiles("test")
 class UserControllerImplTest {
 
+    public static final String BASE_URI = "/api/v1/users";
+    public static final String EMAIL_VALID = "hjfksadhdfsaj@mail.com";
+    public static final String EMAIL_NOT_VALID = "hjfksadhdfsajmail.com";
     @Autowired
     private MockMvc mockMvc;
 
@@ -71,12 +71,12 @@ class UserControllerImplTest {
 
     @Test
     void testFindAllWithSuccess() throws Exception {
-        final var entity1 = generateMock(User.class);
+        final var entity1 = generateMock(User.class).withName("teste1");
         final var entity2 = generateMock(User.class);
 
         userRepository.saveAll(List.of(entity1,entity2));
 
-        mockMvc.perform(get("/api/v1/users"))
+        mockMvc.perform(get(BASE_URI))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$").isArray())
                 .andExpect(jsonPath("$[0]").isNotEmpty())
@@ -85,7 +85,8 @@ class UserControllerImplTest {
                 .andExpect(jsonPath("$[0].profiles").isArray())
                 .andExpect(jsonPath("$[1].id").isNotEmpty())
                 .andExpect(jsonPath("$[1].profiles").isArray())
-
+                .andExpect(jsonPath("$[?(@.name=='"+ entity1.getName() +"')]").exists())
+                .andExpect(jsonPath("$[?(@.name=='"+ entity2.getName() +"')]").exists())
                 ;
 
         userRepository.deleteAll(List.of(entity1,entity2));
@@ -95,20 +96,95 @@ class UserControllerImplTest {
 
     @Test
     void testSaveWithSuccess() throws Exception {
-        final var emailValid = "hjfksadhdfsaj@mail.com";
-        final var entity = generateMock(CreateUserRequest.class).withEmail(emailValid);
+        final var request = generateMock(CreateUserRequest.class).withEmail(EMAIL_VALID);
 
 
-        mockMvc.perform(post("/api/v1/users")
-                    .contentType(APPLICATION_JSON_VALUE)
-                    .content(toJson(entity))
+        mockMvc.perform(post(BASE_URI)
+                        .contentType(APPLICATION_JSON_VALUE)
+                        .content(toJson(request))
                 )
                 .andExpect(status().isCreated())
         ;
 
-        userRepository.deleteByEmail(emailValid);
+        userRepository.deleteByEmail(EMAIL_VALID);
+    }
+
+
+    @Test
+    void testSaveWithConflict() throws Exception {
+
+        final var entity = generateMock(User.class).withEmail(EMAIL_VALID);
+        final var request = generateMock(CreateUserRequest.class).withEmail(EMAIL_VALID);
+        userRepository.save(entity);
+
+
+        mockMvc.perform(post(BASE_URI)
+                        .contentType(APPLICATION_JSON_VALUE)
+                        .content(toJson(request))
+                )
+                .andExpect(status().isConflict())
+                .andExpect(jsonPath("$.message").value("Email [ "+ EMAIL_VALID + " ] already exists."))
+                .andExpect(jsonPath("$.error").value("Conflict"))
+                .andExpect(jsonPath("$.path").value(BASE_URI))
+                .andExpect(jsonPath("$.status").value(CONFLICT.value()))
+                .andExpect(jsonPath("$.timestamp").isNotEmpty())
+        ;
+
+        userRepository.deleteByEmail(EMAIL_VALID);
 
     }
+
+    @Test
+    void testSaveWithBadRequest() throws Exception {
+        final var entity = generateMock(CreateUserRequest.class).withEmail(EMAIL_NOT_VALID);
+
+
+        mockMvc.perform(post(BASE_URI)
+                        .contentType(APPLICATION_JSON_VALUE)
+                        .content(toJson(entity))
+                )
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value("Exception in validation attributes"))
+                .andExpect(jsonPath("$.error").value("Validation Exception"))
+                .andExpect(jsonPath("$.path").value(BASE_URI))
+                .andExpect(jsonPath("$.status").value(400))
+                .andExpect(jsonPath("$.timestamp").isNotEmpty())
+                .andExpect(jsonPath("$.errors[?(@.fieldName=='email' " +
+                        "&& @.message=='Invalid email format.')]").exists())
+
+        ;
+
+
+    }
+
+    @Test
+    void testSaveWithEmptyNameThenThrowBadRequest() throws Exception {
+        final var entity = generateMock(CreateUserRequest.class)
+                .withName("")
+                .withEmail(EMAIL_VALID);
+
+
+        mockMvc.perform(post(BASE_URI)
+                        .contentType(APPLICATION_JSON_VALUE)
+                        .content(toJson(entity))
+                )
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value("Exception in validation attributes"))
+                .andExpect(jsonPath("$.error").value("Validation Exception"))
+                .andExpect(jsonPath("$.path").value(BASE_URI))
+                .andExpect(jsonPath("$.status").value(400))
+                .andExpect(jsonPath("$.timestamp").isNotEmpty())
+                .andExpect(jsonPath("$.errors[?(@.fieldName=='name' " +
+                        "&& @.message=='Name is required, cannot be empty.')]").exists())
+                .andExpect(jsonPath("$.errors[?(@.fieldName=='name' " +
+                        "&& @.message=='Name must be between 3 and 50 characters.')]").exists())
+
+        ;
+
+
+    }
+
+
 
     private  String toJson(Object object) throws Exception {
         try {

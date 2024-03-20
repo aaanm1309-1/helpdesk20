@@ -22,16 +22,10 @@ public class SecurityConfig {
                                         new AntPathRequestMatcher("/swagger-ui/**"),
                                         new AntPathRequestMatcher("/swagger-ui.html"),
                                         new AntPathRequestMatcher("/v3/api-docs/**"),
-                                        new AntPathRequestMatcher("/api/v1/auth/login/**")
+                                        new AntPathRequestMatcher("/api/v1/auth/**")
                                 ).permitAll()
                                 .anyRequest().authenticated()
                 ).sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-//                .oauth2ResourceServer(oauth2ResourceServer ->
-//                        oauth2ResourceServer
-//                                .jwt(jwt ->
-//                                        jwt.decoder(JwtDecoders.fromIssuerLocation("https://idp.example.com/issuer"))
-//                                )
-//                )
                 .and().build();
     }
 

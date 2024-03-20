@@ -1,6 +1,8 @@
 package br.com.adrianomenezes.authserviceapi.controllers.exceptions;
 
 
+import br.com.adrianomenezes.models.exceptions.RefreshTokenExpired;
+import br.com.adrianomenezes.models.exceptions.ResourceNotFoundException;
 import br.com.adrianomenezes.models.exceptions.StandardError;
 import br.com.adrianomenezes.models.exceptions.ValidationException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -34,12 +36,43 @@ public class ControllerExceptionHandler {
                         .path(request.getRequestURI())
                         .build());
 
+
     }
 
 
-    @ExceptionHandler(BadCredentialsException.class)
+    @ExceptionHandler(ResourceNotFoundException.class)
+    ResponseEntity<StandardError> handleTokenNotFoundException(
+            final ResourceNotFoundException ex, final HttpServletRequest request) {
+        return ResponseEntity.status(
+                NOT_FOUND).body(
+                StandardError.builder()
+                        .timestamp(now())
+                        .status(NOT_FOUND.value())
+                        .error(NOT_FOUND.getReasonPhrase())
+                        .message(ex.getMessage())
+                        .path(request.getRequestURI())
+                        .build());
+
+    }
+//
+//    @ExceptionHandler(RefreshTokenExpired.class)
+//    ResponseEntity<StandardError> handleTokenNotFoundException(
+//            final RefreshTokenExpired ex, final HttpServletRequest request) {
+//        return ResponseEntity.status(
+//                BAD_REQUEST).body(
+//                StandardError.builder()
+//                        .timestamp(now())
+//                        .status(BAD_REQUEST.value())
+//                        .error(BAD_REQUEST.getReasonPhrase())
+//                        .message(ex.getMessage())
+//                        .path(request.getRequestURI())
+//                        .build());
+//
+//    }
+
+    @ExceptionHandler({BadCredentialsException.class,RefreshTokenExpired.class})
     ResponseEntity<StandardError> handleBadCredentialsException(
-            final BadCredentialsException ex, final HttpServletRequest request) {
+            final RuntimeException ex, final HttpServletRequest request) {
         return ResponseEntity.status(
                 UNAUTHORIZED).body(
                 StandardError.builder()

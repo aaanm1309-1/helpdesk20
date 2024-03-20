@@ -1,12 +1,15 @@
 package br.com.adrianomenezes.userserviceapi.controller.impl;
 
+import br.com.adrianomenezes.models.requests.CreateUserRequest;
 import br.com.adrianomenezes.userserviceapi.entity.User;
 import br.com.adrianomenezes.userserviceapi.repository.UserRepository;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -15,7 +18,10 @@ import java.util.List;
 import static br.com.adrianomenezes.userserviceapi.creator.CreatorUtils.generateMock;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -84,6 +90,32 @@ class UserControllerImplTest {
 
         userRepository.deleteAll(List.of(entity1,entity2));
 
+    }
+
+
+    @Test
+    void testSaveWithSuccess() throws Exception {
+        final var emailValid = "hjfksadhdfsaj@mail.com";
+        final var entity = generateMock(CreateUserRequest.class).withEmail(emailValid);
+
+
+        mockMvc.perform(post("/api/v1/users")
+                    .contentType(APPLICATION_JSON_VALUE)
+                    .content(toJson(entity))
+                )
+                .andExpect(status().isCreated())
+        ;
+
+        userRepository.deleteByEmail(emailValid);
+
+    }
+
+    private  String toJson(Object object) throws Exception {
+        try {
+            return new ObjectMapper().writeValueAsString(object);
+        } catch (Exception e) {
+            throw new Exception("Error converting object to json", e);
+        }
     }
 
 }

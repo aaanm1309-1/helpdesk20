@@ -1,5 +1,6 @@
 package br.com.adrianomenezes.orderserviceapi.entities;
 
+import br.com.adrianomenezes.models.enums.OrderStatusEnum;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,6 +12,7 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+import static br.com.adrianomenezes.models.enums.OrderStatusEnum.OPEN;
 import static java.time.LocalDateTime.now;
 
 @Data
@@ -38,6 +40,11 @@ public class Order implements Serializable {
 
     @Column(nullable = false,length = 3000)
     private String description;
+
+    @Column(nullable = false)
+    @Builder.Default
+    @Enumerated(EnumType.STRING)
+    private OrderStatusEnum status = OPEN;
 
     @Builder.Default
     private LocalDateTime createdAt = now();

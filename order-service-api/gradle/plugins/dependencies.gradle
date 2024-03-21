@@ -27,17 +27,17 @@ dependencies {
         because('Starter para configuração do Spring Cloud Config')
     }
 
-//    implementation ('org.springframework.boot:spring-boot-starter-data-jpa') {
-//        because('Starter para integração com o Spring Data JPA')
-//    }
+    implementation ('org.springframework.boot:spring-boot-starter-data-jpa') {
+        because('Starter para integração com o Spring Data JPA')
+    }
 
     implementation ('org.springframework.boot:spring-boot-starter-validation') {
         because('Starter para validação de dados com o Spring Validation')
     }
 
-//    implementation ('mysql:mysql-connector-java:8.0.32') {
-//        because('Driver JDBC para conexão com o MySQL')
-//    }
+    implementation ('mysql:mysql-connector-java:8.0.32') {
+        because('Driver JDBC para conexão com o MySQL')
+    }
 
     // Biblioteca de código comum
     implementation ('br.com.adrianomenezes:hd-commons-lib:1.0.0') {

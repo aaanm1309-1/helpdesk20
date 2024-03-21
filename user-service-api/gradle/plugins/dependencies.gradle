@@ -10,8 +10,10 @@ ext {
 }
 
 dependencies {
-    // Biblioteca de código comum
-    implementation 'br.com.adrianomenezes:hd-commons-lib:1.0.0'
+    implementation ('br.com.adrianomenezes:hd-commons-lib:1.0.0') {
+        because('Biblioteca de classes em comum entre os componentes do projeto')
+    }
+
 
     // Starter para desenvolvimento de aplicativos web com Spring Boot
     implementation 'org.springframework.boot:spring-boot-starter-web'

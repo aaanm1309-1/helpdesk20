@@ -6,6 +6,9 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Builder;
 
+import java.io.Serial;
+import java.io.Serializable;
+
 import static br.com.adrianomenezes.models.enums.OrderStatusEnum.OPEN;
 
 public record CreateOrderRequest(
@@ -31,6 +34,7 @@ public record CreateOrderRequest(
 //        @NotBlank(message = "The status cannot be null or blank")
 //        @Size(min= 4, max= 15, message = "The status must be between 4 and 15 characters")
 //        String status
-) {
-
+) implements Serializable {
+        @Serial
+        private static final long serialVersionUID = 1L;
 }

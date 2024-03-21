@@ -1,26 +1,28 @@
 spring:
+  profiles:
+    active: dev
   application:
     name: 'auth-service-api'
-  data:
-    mongodb:
-      uri: 'mongodb+srv://adriano:adriano123@cluster0.buf8p5z.mongodb.net/helpdeskdb?retryWrites=true&w=majority'
-      auto-index-creation: true
-
-server:
-  port: 8083
-
-springdoc:
-  openapi:
-    title: 'Auth Service API'
-    description: 'Component responsible for authentication and authorization of users'
-    version: '1.0.0'
-    contact:
-      name: 'Adriano Menezes'
-      email: ''
-
-jwt:
-  secret: '8h4ABORVlQ06a03d4I2Fjsk601vHiKdAvE+DNLNdr1EsNl4NB/eQHs4uaJOMJGEokc/h6/Z6Ur5qogL2gWyHRUqj1prvuJUn649qkNxQ20I='
-  expiration: 120000
-  expiration-sec:
-    refresh-token: 3600
+#  data:
+#    mongodb:
+#      uri: 'mongodb+srv://adriano:adriano123@cluster0.buf8p5z.mongodb.net/helpdeskdb?retryWrites=true&w=majority'
+#      auto-index-creation: true
+#
+#server:
+#  port: 8083
+#
+#springdoc:
+#  openapi:
+#    title: 'Auth Service API'
+#    description: 'Component responsible for authentication and authorization of users'
+#    version: '1.0.0'
+#    contact:
+#      name: 'Adriano Menezes'
+#      email: ''
+#
+#jwt:
+#  secret: '8h4ABORVlQ06a03d4I2Fjsk601vHiKdAvE+DNLNdr1EsNl4NB/eQHs4uaJOMJGEokc/h6/Z6Ur5qogL2gWyHRUqj1prvuJUn649qkNxQ20I='
+#  expiration: 120000
+#  expiration-sec:
+#    refresh-token: 3600
 

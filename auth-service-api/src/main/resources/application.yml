@@ -3,6 +3,9 @@ spring:
     active: dev
   application:
     name: 'auth-service-api'
+  cloud:
+    config:
+      uri: ${CONFIG_SERVER_URI:http://localhost:8888}
 #  data:
 #    mongodb:
 #      uri: 'mongodb+srv://adriano:adriano123@cluster0.buf8p5z.mongodb.net/helpdeskdb?retryWrites=true&w=majority'

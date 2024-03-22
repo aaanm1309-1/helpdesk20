@@ -14,8 +14,11 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
@@ -23,25 +26,31 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @RequestMapping("/api/v1/orders")
 public interface OrderController {
 
-//    @Operation(summary = "Find user by id")
-//    @ApiResponses(value = {
-//            @ApiResponse(responseCode = "200", description = "User found"),
-//            @ApiResponse(responseCode = "404",
-//                    description = "User not found",
-//                    content = @Content(mediaType = APPLICATION_JSON_VALUE,
-//                            schema = @Schema(implementation = StandardError.class))
-//            ),
-//            @ApiResponse(responseCode = "500",
-//                    description = "Internal server error",
-//                    content = @Content(mediaType = APPLICATION_JSON_VALUE,
-//                            schema = @Schema(implementation = StandardError.class))
-//            )
-//    })
-//    @GetMapping("/{id}")
-//    ResponseEntity<UserResponse> findById(
-//            @Parameter(description = "User id", required = true, example = "65bc391ab0973863d7ff8cab")
-//            @PathVariable(name = "id") final String id
-//    );
+    @Operation(summary = "Find order by id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Order found"),
+            @ApiResponse(responseCode = "400",
+                    description = "Bad Request",
+                    content = @Content(mediaType = APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = StandardError.class))
+            ),
+            @ApiResponse(responseCode = "404",
+                    description = "Order not found",
+                    content = @Content(mediaType = APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = StandardError.class))
+            ),
+            @ApiResponse(responseCode = "500",
+                    description = "Internal server error",
+                    content = @Content(mediaType = APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = StandardError.class))
+            )
+    })
+    @GetMapping("/{id}")
+    ResponseEntity<OrderResponse> findById(
+            @NotBlank(message = "The order id must be informed")
+            @Parameter(description = "Order id", required = true, example = "1")
+            @PathVariable(name = "id") final Long id
+    );
 
     @Operation(summary = "Save new order")
     @ApiResponses(value = {
@@ -95,5 +104,25 @@ public interface OrderController {
             @Parameter(description = "Update order request", required = true)
             @Valid
             @RequestBody final UpdateOrderRequest request
+    );
+
+
+
+    @Operation(summary = "Find All orders")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Orders found"),
+            @ApiResponse(responseCode = "404",
+                    description = "Order not found",
+                    content = @Content(mediaType = APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = StandardError.class))
+            ),
+            @ApiResponse(responseCode = "500",
+                    description = "Internal server error",
+                    content = @Content(mediaType = APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = StandardError.class))
+            )
+    })
+    @GetMapping
+    ResponseEntity<List<OrderResponse>> findAll(
     );
 }

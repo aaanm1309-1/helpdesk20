@@ -111,11 +111,6 @@ public interface OrderController {
     @Operation(summary = "Find All orders")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Orders found"),
-            @ApiResponse(responseCode = "404",
-                    description = "Order not found",
-                    content = @Content(mediaType = APPLICATION_JSON_VALUE,
-                            schema = @Schema(implementation = StandardError.class))
-            ),
             @ApiResponse(responseCode = "500",
                     description = "Internal server error",
                     content = @Content(mediaType = APPLICATION_JSON_VALUE,

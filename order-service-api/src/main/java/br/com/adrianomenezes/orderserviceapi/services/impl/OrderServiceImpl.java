@@ -13,6 +13,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 import static br.com.adrianomenezes.models.enums.OrderStatusEnum.CLOSED;
 import static java.time.LocalDateTime.now;
 
@@ -54,6 +56,11 @@ public class OrderServiceImpl implements OrderService {
     public void deleById(Long id) {
         var entity = findById(id);
         repository.delete(entity);
+    }
+
+    @Override
+    public List<Order> findAll() {
+        return repository.findAll();
     }
 
 

@@ -5,6 +5,8 @@ import br.com.adrianomenezes.models.requests.UpdateOrderRequest;
 import br.com.adrianomenezes.models.responses.OrderResponse;
 import br.com.adrianomenezes.orderserviceapi.entities.Order;
 
+import java.util.List;
+
 public interface OrderService {
     void save(CreateOrderRequest request);
 
@@ -13,4 +15,6 @@ public interface OrderService {
     Order findById(final Long id);
 
     void deleById(Long id);
+
+    List<Order> findAll();
 }

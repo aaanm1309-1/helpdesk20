@@ -125,4 +125,31 @@ public interface OrderController {
     @GetMapping
     ResponseEntity<List<OrderResponse>> findAll(
     );
+
+
+    @Operation(summary = "Delete order by id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "No Content - Order deleted"),
+            @ApiResponse(responseCode = "400",
+                    description = "Bad Request",
+                    content = @Content(mediaType = APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = StandardError.class))
+            ),
+            @ApiResponse(responseCode = "404",
+                    description = "Order not found",
+                    content = @Content(mediaType = APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = StandardError.class))
+            ),
+            @ApiResponse(responseCode = "500",
+                    description = "Internal server error",
+                    content = @Content(mediaType = APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = StandardError.class))
+            )
+    })
+    @DeleteMapping("/{id}")
+    ResponseEntity<Void> deleteById(
+            @NotBlank(message = "The order id must be informed")
+            @Parameter(description = "Order id", required = true, example = "1")
+            @PathVariable(name = "id") final Long id
+    );
 }

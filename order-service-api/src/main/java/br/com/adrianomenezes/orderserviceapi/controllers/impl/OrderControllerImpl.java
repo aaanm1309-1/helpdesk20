@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 import static org.springframework.http.HttpStatus.CREATED;
+import static org.springframework.http.HttpStatus.NO_CONTENT;
 
 @RestController
 @RequiredArgsConstructor
@@ -42,6 +43,12 @@ public class OrderControllerImpl implements OrderController {
     @Override
     public ResponseEntity<List<OrderResponse>> findAll() {
         return null;
+    }
+
+    @Override
+    public ResponseEntity<Void> deleteById(Long id) {
+        service.deleById(id);
+        return ResponseEntity.noContent().build();
     }
 
 

@@ -50,5 +50,11 @@ public class OrderServiceImpl implements OrderService {
         );
     }
 
+    @Override
+    public void deleById(Long id) {
+        var entity = findById(id);
+        repository.delete(entity);
+    }
+
 
 }

@@ -2,6 +2,7 @@ package br.com.adrianomenezes.orderserviceapi.mapper;
 
 import br.com.adrianomenezes.models.enums.OrderStatusEnum;
 import br.com.adrianomenezes.models.requests.CreateOrderRequest;
+import br.com.adrianomenezes.models.requests.UpdateOrderRequest;
 import br.com.adrianomenezes.models.responses.OrderResponse;
 import br.com.adrianomenezes.orderserviceapi.entities.Order;
 import org.mapstruct.Mapper;
@@ -29,10 +30,12 @@ public interface OrderMapper {
     List<OrderResponse> fromEntityList(List<Order> all);
 
     @Mapping(target = "id", ignore = true)
-    Order update(CreateOrderRequest request, @MappingTarget Order orderOld);
+    @Mapping(target = "createdAt", ignore = true)
+    @Mapping(target = "status", source = "request.status", qualifiedByName = "mapStatus")
+    Order update(UpdateOrderRequest request, @MappingTarget Order orderOld);
 
-//    @Named("mapStatus")
-//    default OrderStatusEnum mapStatus(final String status) {
-//        return OrderStatusEnum.toEnum(status);
-//    }
+    @Named("mapStatus")
+    default OrderStatusEnum mapStatus(final String status) {
+        return OrderStatusEnum.toEnum(status);
+    }
 }

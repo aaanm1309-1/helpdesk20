@@ -1,6 +1,8 @@
 package br.com.adrianomenezes.orderserviceapi.controllers.impl;
 
 import br.com.adrianomenezes.models.requests.CreateOrderRequest;
+import br.com.adrianomenezes.models.requests.UpdateOrderRequest;
+import br.com.adrianomenezes.models.responses.OrderResponse;
 import br.com.adrianomenezes.orderserviceapi.controllers.OrderController;
 import br.com.adrianomenezes.orderserviceapi.services.OrderService;
 import lombok.RequiredArgsConstructor;
@@ -19,5 +21,10 @@ public class OrderControllerImpl implements OrderController {
     public ResponseEntity<Void> save(CreateOrderRequest request) {
         service.save(request);
         return ResponseEntity.status(CREATED.value()).build() ;
+    }
+
+    @Override
+    public ResponseEntity<OrderResponse> update(Long id, UpdateOrderRequest request) {
+        return ResponseEntity.ok().body(service.update(id,request));
     }
 }

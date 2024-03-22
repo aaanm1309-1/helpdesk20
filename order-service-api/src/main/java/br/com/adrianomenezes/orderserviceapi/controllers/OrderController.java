@@ -3,6 +3,8 @@ package br.com.adrianomenezes.orderserviceapi.controllers;
 import br.com.adrianomenezes.models.exceptions.StandardError;
 import br.com.adrianomenezes.models.requests.CreateOrderRequest;
 import br.com.adrianomenezes.models.requests.CreateUserRequest;
+import br.com.adrianomenezes.models.requests.UpdateOrderRequest;
+import br.com.adrianomenezes.models.responses.OrderResponse;
 import br.com.adrianomenezes.models.responses.UserResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -64,5 +66,34 @@ public interface OrderController {
     ResponseEntity<Void> save(
             @Valid
             @RequestBody final CreateOrderRequest request
+    );
+
+    @Operation(summary = "Update order")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Order updated"),
+            @ApiResponse(responseCode = "400",
+                    description = "Bad request",
+                    content = @Content(mediaType = APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = StandardError.class))
+            ),
+            @ApiResponse(responseCode = "404",
+                    description = "Not found",
+                    content = @Content(mediaType = APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = StandardError.class))
+            ),
+            @ApiResponse(responseCode = "500",
+                    description = "Internal server error",
+                    content = @Content(mediaType = APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = StandardError.class))
+            )
+    })
+    @PutMapping("/{id}")
+    ResponseEntity<OrderResponse> update(
+            @Parameter(description = "Order id", required = true,
+            example = "1")
+            @PathVariable(name = "id") Long id,
+            @Parameter(description = "Update order request", required = true)
+            @Valid
+            @RequestBody final UpdateOrderRequest request
     );
 }

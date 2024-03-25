@@ -9,6 +9,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.Named;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 
@@ -28,6 +29,7 @@ public interface OrderMapper {
     Order fromRequest(CreateOrderRequest request);
 
     List<OrderResponse> fromEntityList(List<Order> all);
+
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "createdAt", ignore = true)

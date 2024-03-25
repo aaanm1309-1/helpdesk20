@@ -5,12 +5,17 @@ import br.com.adrianomenezes.models.exceptions.ResourceNotFoundException;
 import br.com.adrianomenezes.models.requests.CreateOrderRequest;
 import br.com.adrianomenezes.models.requests.UpdateOrderRequest;
 import br.com.adrianomenezes.models.responses.OrderResponse;
+import br.com.adrianomenezes.models.responses.UserResponse;
+import br.com.adrianomenezes.orderserviceapi.clients.UserServiceFeignClient;
 import br.com.adrianomenezes.orderserviceapi.entities.Order;
 import br.com.adrianomenezes.orderserviceapi.mapper.OrderMapper;
 import br.com.adrianomenezes.orderserviceapi.repositories.OrderRepository;
 import br.com.adrianomenezes.orderserviceapi.services.OrderService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -25,8 +30,14 @@ public class OrderServiceImpl implements OrderService {
 
     private final OrderRepository repository;
     private final OrderMapper mapper;
+    private final UserServiceFeignClient userServiceFeignClient;
     @Override
     public void save(CreateOrderRequest request) {
+        final var requester = validateUserId(request.requesterId());
+        final var customer = validateUserId(request.customerId());
+
+        log.info("Requester: {}", requester);
+        log.info("Customer: {}", customer);
 
         final var entity = repository.save(mapper.fromRequest(request));
         log.info("Order created: {}",entity);
@@ -61,6 +72,22 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public List<Order> findAll() {
         return repository.findAll();
+    }
+
+    @Override
+    public Page<Order> findAllPaginated(Integer page, Integer linesPerPage, String direction, String orderBy) {
+        PageRequest pageRequest = PageRequest.of(page,
+                linesPerPage,
+                Sort.Direction.valueOf(direction),
+                orderBy);
+        return repository.findAll(pageRequest);
+
+    }
+
+    UserResponse validateUserId(final String id) {
+        return userServiceFeignClient.findById(id).getBody();
+//        log.info("User id found: {}",id);
+
     }
 
 

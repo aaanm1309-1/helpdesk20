@@ -15,6 +15,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -107,6 +108,30 @@ public interface OrderController {
     );
 
 
+
+    @Operation(summary = "Find All orders paginated")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Orders found"),
+            @ApiResponse(responseCode = "500",
+                    description = "Internal server error",
+                    content = @Content(mediaType = APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = StandardError.class))
+            )
+    })
+    @GetMapping("/page")
+    ResponseEntity<Page<OrderResponse>> findAllPaginated(
+            @Parameter(description = "Page number", required = true, example = "1")
+            @RequestParam(name = "page",defaultValue = "0") final Integer page,
+
+            @Parameter(description = "Lines per page", required = true, example = "10")
+            @RequestParam(name = "linesPerPage",defaultValue = "10") final Integer linesPerPage,
+
+            @Parameter(description = "Order direction", required = true, example = "ASC")
+            @RequestParam(name = "direction",defaultValue = "ASC") final String direction,
+
+            @Parameter(description = "Order by attribute", required = true, example = "id")
+            @RequestParam(name = "orderBy",defaultValue = "id") final String orderBy
+            );
 
     @Operation(summary = "Find All orders")
     @ApiResponses(value = {

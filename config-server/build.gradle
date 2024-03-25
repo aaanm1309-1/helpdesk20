@@ -10,7 +10,7 @@ group = 'br.com.adrianomenezes'
 version = '1.0.0'
 
 java {
-	sourceCompatibility = '17'
+	sourceCompatibility = '21'
 }
 
 tasks.named('test') {

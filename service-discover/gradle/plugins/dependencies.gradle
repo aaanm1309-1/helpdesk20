@@ -1,0 +1,39 @@
+repositories {
+    mavenLocal()
+    mavenCentral()
+    maven { url 'https://artifactory-oss.prod.netflix.net/artifactory/maven-oss-candidates' }
+}
+ext {
+
+//    set('springCloudVersion', "2023.0.0")
+    set('springCloudVersion', "2022.0.4")
+}
+
+dependencies {
+
+    implementation('org.springframework.cloud:spring-cloud-starter-config') {
+        because('Starter para configuração do Spring Cloud Config')
+    }
+
+    implementation ('org.springframework.cloud:spring-cloud-starter-bootstrap') {
+        because('Starter para configuração do Spring Cloud Config')
+    }
+
+    implementation ('org.springframework.boot:spring-boot-actuator') {
+        because('Starter para configuração do Spring Boot Actuator')
+    }
+
+    implementation ('org.springframework.cloud:spring-cloud-starter-netflix-eureka-server') {
+        because('Starter para integração com o Eureka Discovery Server')
+    }
+
+    // Dependência de teste
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+}
+
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+    }
+}

@@ -1,5 +1,6 @@
 package br.com.adrianomenezes.orderserviceapi.services.impl;
 
+import br.com.adrianomenezes.models.dtos.OrderCreatedMessage;
 import br.com.adrianomenezes.models.enums.OrderStatusEnum;
 import br.com.adrianomenezes.models.exceptions.ResourceNotFoundException;
 import br.com.adrianomenezes.models.requests.CreateOrderRequest;
@@ -13,6 +14,7 @@ import br.com.adrianomenezes.orderserviceapi.repositories.OrderRepository;
 import br.com.adrianomenezes.orderserviceapi.services.OrderService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -31,6 +33,8 @@ public class OrderServiceImpl implements OrderService {
     private final OrderRepository repository;
     private final OrderMapper mapper;
     private final UserServiceFeignClient userServiceFeignClient;
+    private final RabbitTemplate rabbitTemplate;
+
     @Override
     public void save(CreateOrderRequest request) {
         final var requester = validateUserId(request.requesterId());
@@ -41,6 +45,12 @@ public class OrderServiceImpl implements OrderService {
 
         final var entity = repository.save(mapper.fromRequest(request));
         log.info("Order created: {}",entity);
+
+        rabbitTemplate.convertAndSend(
+                "helpdesk",
+                "rk.orders.create",
+                new OrderCreatedMessage(mapper.fromEntity(entity), customer, requester));
+
     }
 
     @Override

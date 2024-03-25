@@ -45,6 +45,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public OrderResponse update(Long id, UpdateOrderRequest request) {
+        validateUsersToUpdate(request);
         Order order = findById(id);
         order = mapper.update(request, order);
         if (order.getStatus().equals(CLOSED.toString())){
@@ -88,6 +89,11 @@ public class OrderServiceImpl implements OrderService {
         return userServiceFeignClient.findById(id).getBody();
 //        log.info("User id found: {}",id);
 
+    }
+
+    private void validateUsersToUpdate( UpdateOrderRequest request) {
+        if (request.requesterId() != null) validateUserId(request.requesterId());
+        if (request.customerId() != null) validateUserId(request.customerId());
     }
 
 

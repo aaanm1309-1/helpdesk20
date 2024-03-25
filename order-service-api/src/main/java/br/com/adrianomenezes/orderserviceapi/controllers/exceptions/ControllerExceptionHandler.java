@@ -6,6 +6,7 @@ import br.com.adrianomenezes.models.exceptions.ResourceNotFoundException;
 import br.com.adrianomenezes.models.exceptions.StandardError;
 import br.com.adrianomenezes.models.exceptions.ValidationException;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -31,7 +32,7 @@ public class ControllerExceptionHandler {
 
 
     @ExceptionHandler(ResourceNotFoundException.class)
-    ResponseEntity<StandardError> handleTokenNotFoundException(
+    ResponseEntity<StandardError> handleResourceNotFoundException(
             final ResourceNotFoundException ex, final HttpServletRequest request) {
         return ResponseEntity.status(
                 NOT_FOUND).body(
@@ -59,36 +60,6 @@ public class ControllerExceptionHandler {
                         .build());
 
     }
-//
-//    @ExceptionHandler(RefreshTokenExpired.class)
-//    ResponseEntity<StandardError> handleTokenNotFoundException(
-//            final RefreshTokenExpired ex, final HttpServletRequest request) {
-//        return ResponseEntity.status(
-//                BAD_REQUEST).body(
-//                StandardError.builder()
-//                        .timestamp(now())
-//                        .status(BAD_REQUEST.value())
-//                        .error(BAD_REQUEST.getReasonPhrase())
-//                        .message(ex.getMessage())
-//                        .path(request.getRequestURI())
-//                        .build());
-//
-//    }
-
-//    @ExceptionHandler({BadCredentialsException.class,RefreshTokenExpired.class})
-//    ResponseEntity<StandardError> handleBadCredentialsException(
-//            final RuntimeException ex, final HttpServletRequest request) {
-//        return ResponseEntity.status(
-//                UNAUTHORIZED).body(
-//                StandardError.builder()
-//                        .timestamp(now())
-//                        .status(UNAUTHORIZED.value())
-//                        .error(UNAUTHORIZED.getReasonPhrase())
-//                        .message(ex.getMessage())
-//                        .path(request.getRequestURI())
-//                        .build());
-//
-//    }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     ResponseEntity<StandardError> handleMethodArgumentNotValidException(
@@ -108,6 +79,21 @@ public class ControllerExceptionHandler {
         }
 
         return ResponseEntity.badRequest().body(error);
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    ResponseEntity<StandardError> handleDataIntegrityViolationException(
+            final DataIntegrityViolationException ex, final HttpServletRequest request) {
+
+        return ResponseEntity.status(
+                CONFLICT).body(
+                StandardError.builder()
+                        .timestamp(now())
+                        .status(CONFLICT.value())
+                        .error(CONFLICT.getReasonPhrase())
+                        .message(ex.getMessage())
+                        .path(request.getRequestURI())
+                        .build());
     }
 
 

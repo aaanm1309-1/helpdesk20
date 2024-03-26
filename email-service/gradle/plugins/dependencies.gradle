@@ -18,10 +18,13 @@ dependencies {
         because('Starter para desenvolvimento de envio de emails com Spring Boot')
     }
 
+    implementation('org.springframework.boot:spring-boot-starter-thymeleaf') {
+        because('Starter para desenvolvimento de aplicativos com Thymeleaf')
+    }
+
     implementation('org.springframework.boot:spring-boot-starter-web') {
         because('Starter para desenvolvimento de aplicativos web com Spring Boot')
     }
-
 
     implementation('org.springframework.boot:spring-boot-starter-amqp') {
         because('Starter para desenvolvimento de aplicativos com RabbitMQ')

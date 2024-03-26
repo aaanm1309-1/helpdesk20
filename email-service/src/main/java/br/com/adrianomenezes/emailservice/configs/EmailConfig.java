@@ -37,6 +37,8 @@ public class EmailConfig {
         mailSender.setUsername(username);
         mailSender.setPassword(password);
         mailSender.setProtocol(protocol);
+        mailSender.setDefaultEncoding("utf-8");
+        properties.setProperty("mail.mime.charset", "utf-8");
         mailSender.setJavaMailProperties(properties);
         return mailSender;
     }

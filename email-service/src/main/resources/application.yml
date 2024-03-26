@@ -1,7 +1,19 @@
 spring:
   application:
     name: 'email-service'
-  amqp:
-    deserialization:
-      trust:
-        all: true
+mail:
+  host: ${MAIL_HOST:smtp.gmail.com}
+  port: ${MAIL_PORT:587}
+  username: ${MAIL_USERNAME:adriano.menezes.dev@gmail.com}
+  password: ${MAIL_PASSWORD:jdcj eybm diww wmmu}
+  protocol: ${MAIL_PROTOCOL:smtp}
+  text-created-order-confirmation: |
+    Ol? %s, sua ordem foi criada com sucesso!
+
+    Detalhes da ordem:
+    - ID: %s
+    - T?tulo: %s
+    - Descri??o: %s
+    - Data de cria??o: %s
+    - Status: %s
+    - T?cnico respons?vel: %s

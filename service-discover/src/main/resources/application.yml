@@ -3,10 +3,6 @@ spring:
     active: dev
   application:
     name: 'service-discover'
-  cloud:
-    config:
-      uri: 'config-server'
-#      uri: ${CONFIG_SERVER_URI:http://localhost:8888}
 eureka:
   instance:
     prefer-ip-address: true

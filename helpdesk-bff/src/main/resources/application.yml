@@ -1,0 +1,12 @@
+spring:
+  profiles:
+    active: dev
+  application:
+    name: 'helpdesk-bff'
+eureka:
+  instance:
+    prefer-ip-address: true
+  cloud:
+    config:
+      uri: 'config-server'
+#      uri: ${CONFIG_SERVER_URI:http://localhost:8888}

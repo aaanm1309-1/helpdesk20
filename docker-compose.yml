@@ -36,7 +36,7 @@ services:
     environment:
       - CONFIG_SERVER_URI=http://github.com/aaanm1309-1/helpdesk20-config
       - CONFIG_SERVER_USERNAME=aaanm1309-1
-      - CONFIG_SERVER_PASSWORD=
+      - CONFIG_SERVER_PASSWORD= 
       - PORT=8888
     ports:
       - "8888:8888"

@@ -45,6 +45,25 @@ services:
     links:
       - config-server
 
+  api-gateway:
+    image: aaanm13/helpdesk-api-gateway:1.0.0
+    container_name: 'service-discoverapi-gateway'
+    environment:
+      - CONFIG_SERVER_URI=config-server:8888
+      - PORT=8765
+    ports:
+      - "8765:8765"
+    expose:
+      - 8765
+    networks:
+      - helpdesk
+    depends_on:
+      - config-server
+      - service-discovery
+    links:
+      - config-server
+      - service-discovery
+
 networks:
   helpdesk:
     driver: bridge

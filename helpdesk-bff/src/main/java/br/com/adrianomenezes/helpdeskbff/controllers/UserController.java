@@ -1,4 +1,4 @@
-package br.com.adrianomenezes.helpdeskbff.controller;
+package br.com.adrianomenezes.helpdeskbff.controllers;
 
 
 import br.com.adrianomenezes.models.exceptions.StandardError;

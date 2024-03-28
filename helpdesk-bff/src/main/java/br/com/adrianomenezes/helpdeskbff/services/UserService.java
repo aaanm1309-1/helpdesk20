@@ -1,6 +1,6 @@
-package br.com.adrianomenezes.helpdeskbff.service;
+package br.com.adrianomenezes.helpdeskbff.services;
 
-import br.com.adrianomenezes.helpdeskbff.client.UserFeignClient;
+import br.com.adrianomenezes.helpdeskbff.clients.UserFeignClient;
 import br.com.adrianomenezes.models.requests.CreateUserRequest;
 import br.com.adrianomenezes.models.requests.UpdateUserRequest;
 import br.com.adrianomenezes.models.responses.UserResponse;

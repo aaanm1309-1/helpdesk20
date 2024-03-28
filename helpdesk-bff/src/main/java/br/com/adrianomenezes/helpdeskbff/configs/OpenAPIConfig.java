@@ -1,4 +1,4 @@
-package br.com.adrianomenezes.helpdeskbff.config;
+package br.com.adrianomenezes.helpdeskbff.configs;
 
 
 import io.swagger.v3.oas.models.OpenAPI;

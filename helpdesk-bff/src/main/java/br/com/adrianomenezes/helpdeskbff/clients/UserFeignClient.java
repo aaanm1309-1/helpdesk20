@@ -1,9 +1,8 @@
-package br.com.adrianomenezes.helpdeskbff.client;
+package br.com.adrianomenezes.helpdeskbff.clients;
 
 import br.com.adrianomenezes.models.requests.CreateUserRequest;
 import br.com.adrianomenezes.models.requests.UpdateUserRequest;
 import br.com.adrianomenezes.models.responses.UserResponse;
-import io.swagger.v3.oas.annotations.Parameter;
 import jakarta.validation.Valid;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +14,8 @@ import java.util.List;
         path = "api/v1/users"
 )
 public interface UserFeignClient {
+
+
     @GetMapping("/{id}")
     ResponseEntity<UserResponse> findById(@PathVariable(name = "id") final String id);
 
@@ -30,5 +31,6 @@ public interface UserFeignClient {
             @Valid
             @RequestBody final UpdateUserRequest updateUserRequest
     );
+
 
 }

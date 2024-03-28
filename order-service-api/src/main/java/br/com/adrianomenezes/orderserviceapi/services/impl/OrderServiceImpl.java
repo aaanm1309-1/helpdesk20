@@ -58,7 +58,7 @@ public class OrderServiceImpl implements OrderService {
         validateUsersToUpdate(request);
         Order order = findById(id);
         order = mapper.update(request, order);
-        if (order.getStatus().equals(CLOSED.toString())){
+        if (order.getStatus().name().equals(CLOSED.toString())){
             order.setClosedAt(now());
         }
         final var entity = repository.save(order);

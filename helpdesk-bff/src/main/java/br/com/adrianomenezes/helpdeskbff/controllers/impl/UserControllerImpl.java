@@ -1,10 +1,10 @@
-package br.com.adrianomenezes.helpdeskbff.controller.impl;
+package br.com.adrianomenezes.helpdeskbff.controllers.impl;
 
-import br.com.adrianomenezes.helpdeskbff.service.UserService;
+import br.com.adrianomenezes.helpdeskbff.services.UserService;
 import br.com.adrianomenezes.models.requests.CreateUserRequest;
 import br.com.adrianomenezes.models.requests.UpdateUserRequest;
 import br.com.adrianomenezes.models.responses.UserResponse;
-import br.com.adrianomenezes.helpdeskbff.controller.UserController;
+import br.com.adrianomenezes.helpdeskbff.controllers.UserController;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;

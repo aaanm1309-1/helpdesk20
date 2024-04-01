@@ -2,9 +2,11 @@ spring:
   profiles:
     active: dev
   application:
-    name: 'auth-service-api'
+    name: 'upload-file-realty-imovel-api'
   cloud:
     config:
       uri: ${CONFIG_SERVER_URI:http://localhost:8888}
-
-
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
